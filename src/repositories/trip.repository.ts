@@ -14,11 +14,23 @@ export default class TripRepository implements ITripRepository {
       "SELECT id, origin_id, destination_id, deperture_date, capacity, active WHERE active = 1",
     );
 
-    if ( results.length > 0) {
-        return results;
+    if (results.length > 0) {
+      return results;
     }
 
     return [];
+  }
+
+  async findById(id: number): Promise<ITrip | null> {
+    const [result] = await this.pool.execute<TripRow[]>(
+      "SELECT id, origin_id, destination_id, deperture_date, capacity, active WHERE id = ?;",
+      [id],
+    );
+
+    if (result.length > 0) {
+      return result[0];
+    }
+    return null;
   }
 
   async createTrip(
